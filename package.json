@@ -1,5 +1,5 @@
 {
-  "name": "bewitness_pwa",
+  "name": "personal-details",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -17,6 +17,7 @@
     "vue-idb": "^0.2.0"
   },
   "devDependencies": {
+    "@nuxt/types": "~2.15.0",
     "@nuxtjs/vuetify": "^1.11.3"
   }
 }

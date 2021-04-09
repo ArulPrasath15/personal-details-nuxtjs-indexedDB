@@ -1,12 +1,11 @@
-<template>
-  <div>
+<template >
+  <div >
     <v-dialog v-model="dialog" persistent max-width="600px">
       <template v-slot:activator="{ on, attrs }">
         <v-row justify="center" class="mt-2">
           <v-col align="center" sm="6" md="8">
             <v-card
               v-for="i in Details"
-              color="white"
               class="mt-2 mb-2 rounded-lg"
               :key="i['id']"
               elevation="3"
@@ -30,13 +29,20 @@
                     >
                       mdi-pencil</v-icon
                     >
+                    <v-icon
+                      color="red"
+                      large
+                      @click="remove(i)"
+                    >
+                      mdi-delete</v-icon
+                    >
                   </v-col>
+
                 </v-row>
               </v-card-text>
             </v-card>
 
             <v-card
-              color="#6ded8f"
               class="mt-2 mb-2 "
               v-bind="attrs"
               v-on="on"
