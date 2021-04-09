@@ -49,7 +49,7 @@
               @click="cleardata"
             >
               <v-card-text
-                ><v-icon dense medium>mdi-plus</v-icon> Add</v-card-text
+                ><v-icon dense medium>mdi-plus</v-icon> Add Contact</v-card-text
               >
             </v-card>
           </v-col>

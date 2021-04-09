@@ -1,4 +1,4 @@
-# Personal details - nuxt - IndexedDB
+# Personal details - nuxtjs- IndexedDB
 
 ## Build Setup
 
