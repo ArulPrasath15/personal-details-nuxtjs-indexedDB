@@ -1,5 +1,5 @@
 <template>
-  <v-card outlined  elevation="2" max-width="330" min-width="330">
+  <v-card outlined  elevation="5" max-width="330" min-width="330" class="hovercursor" >
     <v-card-title> <h4>{{task.title + "("+ task.name +")"}} </h4></v-card-title>
     <v-divider></v-divider>
     <v-card-text >
@@ -23,3 +23,22 @@ export default {
   },
 };
 </script>
+<style scoped>
+
+.hovercursor
+{
+  cursor: grab;
+}
+.hovercursor:active
+{
+  cursor: grabbing;
+}
+.hovercursor
+{
+  cursor: grabbing;
+}
+
+
+
+
+</style>

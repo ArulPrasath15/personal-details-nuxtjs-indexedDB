@@ -1,22 +1,58 @@
 <template>
     <div class="mt-5">
+
+        <div v-if="!loader">
         <v-row class="mr-15">
           <v-col cols="3" class="ml-10">
-            <h2>Welcome {{username}} !</h2>
-           <v-row class="pt-8"><h1 class="ml-5 ">BOARD</h1><h4 class="pt-3 pl-2" ><i>( Members : {{namelists}} )</i></h4></v-row>
+           <v-row class="pt-8"><h1 class="ml-5 ">BOARD</h1><h4 class="pt-3 pl-2" ></h4></v-row>
+
+            <v-expansion-panels accordion class="mt-4" >
+            <v-expansion-panel style="background-color: #d0d3f8" >
+              <v-expansion-panel-header disable-icon-rotate>
+                <v-row>
+                  <v-col>
+                    Members List
+                  </v-col>
+                </v-row>
+                <template v-slot:actions>
+                  <v-icon color="teal">
+                    mdi-menu-down
+                  </v-icon>
+                </template>
+              </v-expansion-panel-header>
+              <v-expansion-panel-content>
+                <v-list dense style="background-color: #d0d3f8">
+                  <v-list-item
+                    v-for="(item, i) in namelists.split(',')"
+                    :key="i"
+                  >
+                    <v-list-item-icon>
+                      <v-icon >mdi-creation</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-content >
+                      <v-list-item-title> {{ item }}</v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
+                </v-list>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+              </v-expansion-panels>
+
           </v-col><v-spacer></v-spacer>
           <v-col cols="3">
             <v-text-field
+              background-color="white"
               v-model="findstring"
+              color="black"
               outlined
-              label=" Search By Assigne"
+              label=" Search By Assignee"
               prepend-inner-icon="mdi-layers-search-outline"
 
             ></v-text-field>
           </v-col>
         </v-row>
       <v-row justify="end">
-          <v-col  cols="2"><v-btn outlined @click="fetchdata" color="green"><v-icon left>
+          <v-col  cols="2"><v-btn dark @click="fetchdata" color="deep-purple accent-4" width="160"><v-icon left>
             mdi-cloud-upload
           </v-icon>
             Save
@@ -27,7 +63,7 @@
            cols="3"
            class="px-2"
          ><v-container class="blue lighten-3" id="container" >
-           <h2>TO DO {{  findstring==''? '( '+todos.length+' )':''}}</h2>
+           <h2> <v-icon color="black" size="28">mdi-bookmark</v-icon> TO DO {{  findstring==''? '( '+todos.length+' )':''}}</h2>
            <draggable :list="todos" :animation="200" ghost-class="ghost-card" group="tasks" @change="todosave()" >
              <task-card
                v-for="(task) in todos"
@@ -51,7 +87,11 @@
 
                >
                  <v-card-title ><v-row justify="center">
-                   + Add
+                   <v-btn icon>
+                     <v-icon size="30" dense >mdi-plus</v-icon>
+                     <h2 class="ml-2">Add</h2>
+                   </v-btn>
+
                  </v-row></v-card-title>
                </v-card>
              </template>
@@ -112,7 +152,7 @@
                        <v-text-field
                          v-model="assign"
                          label="Assigne ID"
-                         v-if="userdata.accounttype!='user'"
+                         v-if="userdata.admin!=undefined"
                          required
                        ></v-text-field>
                      </v-col>
@@ -145,7 +185,10 @@
            cols="3"
            class="px-2"
          ><v-container class="yellow lighten-3" id="container" >
-           <h2 >IN PROCESS {{  findstring==''? '( '+inprocess.length+' )':''}}</h2>
+
+
+
+           <h2 > <v-icon color="black" size="28">mdi-sync</v-icon> IN PROCESS {{  findstring==''? '( '+inprocess.length+' )':''}} </h2>
            <draggable :list="inprocess" :animation="200" ghost-class="ghost-card" group="tasks" @change="inprocessave()">
              <task-card
                v-for="(task) in inprocess"
@@ -162,7 +205,7 @@
            cols="3"
            class="px-2"
          ><v-container class="green lighten-3" id="container">
-           <h2 >DONE {{  findstring==''? '( '+done.length+' )':''}}</h2>
+           <h2 > <v-icon color="black" size="28">mdi-check-all</v-icon> DONE {{  findstring==''? '( '+done.length+' )':''}}</h2>
            <draggable :list="done" :animation="200" ghost-class="ghost-card" group="tasks" @change="donesave()" >
              <task-card
                v-for="(task) in done"
@@ -180,7 +223,7 @@
            class="px-2"
          >
            <v-container class="red lighten-3" id="container" >
-           <h2 >BLOCK {{  findstring==''? '( '+block.length+' )':''}}</h2>
+           <h2 > <v-icon color="black" size="23">mdi-block-helper</v-icon> BLOCK {{  findstring==''? '( '+block.length+' )':''}}</h2>
            <draggable :list="block" :animation="200" ghost-class="ghost-card" group="tasks" @change="blocksave()">
              <task-card
                v-for="(task) in block"
@@ -194,15 +237,32 @@
            </v-container>
          </div>
        </v-row>
+
+        </div>
+      <div v-else style="height:100%" >
+        <v-overlay :value="true" opacity="0.6">
+          <v-img :src="require('@/static/jira.png')" max-width="63" max-height="63"></v-img>
+          <br>
+          <v-progress-linear indeterminate color="cyan"></v-progress-linear>
+        </v-overlay></div>
+
+      <v-snackbar v-model="snackbar1"  color="green" :timeout="2000">
+        {{ this.snackbar1_text}}
+        <template v-slot:action="{ attrs }"><v-btn color="black" text v-bind="attrs" @click="snackbar1 = false">Close</v-btn></template>
+      </v-snackbar>
+
       </div>
+
+
 </template>
 <script>
 import draggable from "vuedraggable";
 import TaskCard from "../components/TaskCard.vue";
 import axios from '~/plugins/axios'
 import Users from "../components/Users";
-
+let config
 import { uuid } from "vue-idb";
+
 export default {
   name: "App",
   components: {
@@ -229,6 +289,10 @@ export default {
       inprocess1:'',
       done1:'',
       block1:'',
+      loader:false,
+      snackbar1:false,
+      snackbar1_text:'TODO Created Successfully !'
+
 
     }
 
@@ -236,6 +300,7 @@ export default {
   methods: {
     add: function()
     {
+      this.loader=true
       if(this.assign=='' && this.addtitle!='' && this.adddes!='' && this.date!='')
       {
         var param={userid:this.userdata.userid,title:this.addtitle,des:this.adddes,edate:this.date}
@@ -244,7 +309,10 @@ export default {
           this.adddes=''
           this.addtitle=''
           this.date=''
+          this.loader=false
+          this.snackbar1=true,
           this.fetchdata()
+
         });
       }else
       {
@@ -258,6 +326,7 @@ export default {
                 this.addtitle=''
                 this.date=''
                 this.assign=''
+                this.loader=false
                 this.fetchdata()
               });
 
@@ -317,8 +386,9 @@ export default {
 
   fetchdata:async function()
   {
-
-    axios.get('/tasks/state/1').then((response) => {
+    this.loader=true
+    console.log(config)
+    await axios.get('/tasks/state/1',config).then((response) => {
 
       this.todos1=response.data;
       let promises = [];
@@ -340,7 +410,7 @@ export default {
 
     });
 
-    axios.get('/tasks/state/2').then((response) => {
+    await axios.get('/tasks/state/2',config).then((response) => {
       this.inprocess1=response.data;
       let promises = [];
       let self=this;
@@ -360,7 +430,7 @@ export default {
       });
     });
 
-    axios.get('/tasks/state/3').then((response) => {
+    await axios.get('/tasks/state/3',config).then((response) => {
 
       this.done1=response.data;
       let promises = [];
@@ -381,7 +451,7 @@ export default {
       });
     });
 
-    axios.get('/tasks/state/4').then((response) => {
+    await axios.get('/tasks/state/4',config).then((response) => {
       this.block1=response.data;
       let promises = [];
       let self=this;
@@ -400,6 +470,7 @@ export default {
         console.log(this.block);
       });
     });
+    this.loader=false
   }
 
   },
@@ -424,10 +495,17 @@ export default {
       {
           this.userdata=tests[0]
           this.username=tests[0].Name;
+          config = {
+            headers: {
+              'Authorization': 'token ' + this.userdata.token
+            }
+          }
+          this.fetchdata();
+
       }
 
     });
-   this.fetchdata();
+
     axios.get('/allusers').then((response) => {
       this.namelist=response.data;
     });

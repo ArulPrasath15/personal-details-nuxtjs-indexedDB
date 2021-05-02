@@ -43,14 +43,22 @@ export default {
   },
   methods:{
     submit:async function () {
-      if (this.username != '' && this.pass==123) {
-        await axios.get('/users/' + this.username).then((response) => {
-          this.userdata = response.data[0]
-          console.log(this.userdata)
-          if( this.userdata)
+      if (this.username != '' && this.pass!='') {
+        var param={
+          name:this.username,
+          pass:this.pass
+        }
+        console.log(param)
+        await axios.post('/checkusers',param).then((response) => {
+          if(response.data.message=="success")
           {
-            console.log("in")
-            this.init()
+
+            this.userdata=response.data.data.Items[0];
+            this.token=response.data.token
+            console.log(this.userdata)
+            console.log(this.token)
+            console.log("Login")
+            this.login()
           }else
           {
             alert(" Invalid Credientials")
@@ -62,13 +70,14 @@ export default {
         alert(" Enter Valid Credientials")
       }
     },
-    init:function ()
+    login:function ()
     {
       this.$db.Details.add({
         id: 1,
         Name: this.userdata.name,
         admin: this.userdata.admin,
-        userid:this.userdata.userid
+        userid:this.userdata.userid,
+        token:this.token
       }).then(() => this.$router.push('/'));
     }
 

@@ -32,9 +32,9 @@ export default {
       title,
     }
   },
-  created() {
-    this.$router.push('/login')
-  }
+  // created() {
+  //   this.$router.push('/login')
+  // }
 }
 </script>
 
