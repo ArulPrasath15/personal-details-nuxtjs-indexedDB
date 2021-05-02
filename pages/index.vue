@@ -2,7 +2,7 @@
     <div class="mt-5">
         <v-row class="mr-15">
           <v-col cols="3" class="ml-10">
-            <h2><i>Welcome {{username}} !</i></h2>
+            <h2>Welcome {{username}} !</h2>
            <v-row class="pt-8"><h1 class="ml-5 ">BOARD</h1><h4 class="pt-3 pl-2" ><i>( Members : {{namelists}} )</i></h4></v-row>
           </v-col><v-spacer></v-spacer>
           <v-col cols="3">
@@ -11,6 +11,7 @@
               outlined
               label=" Search By Assigne"
               prepend-inner-icon="mdi-layers-search-outline"
+
             ></v-text-field>
           </v-col>
         </v-row>
@@ -32,8 +33,9 @@
                v-for="(task) in todos"
                :key="task.id"
                :task="task"
-               v-if="task.name.toUpperCase().includes(findstring.toUpperCase())"
                class="mt-3 "
+               v-if="task.name.toUpperCase().includes(findstring.toUpperCase())"
+
              > </task-card>
            </draggable>
 
@@ -46,7 +48,7 @@
                <v-card outlined class="mt-3 cursor-move"
                        v-bind="attrs"
                        v-on="on" min-height="50"
-                      v-if="findstring==''"
+
                >
                  <v-card-title ><v-row justify="center">
                    + Add
@@ -150,6 +152,7 @@
                :key="task.id"
                :task="task"
                v-if="task.name.toUpperCase().includes(findstring.toUpperCase())"
+
                class="mt-3 cursor-move"
              ></task-card>
            </draggable>
@@ -166,6 +169,7 @@
                :key="task.id"
                :task="task"
                v-if="task.name.toUpperCase().includes(findstring.toUpperCase())"
+
                class="mt-3 cursor-move"
              ></task-card>
            </draggable>
@@ -183,6 +187,7 @@
                :key="task.id"
                :task="task"
                v-if="task.name.toUpperCase().includes(findstring.toUpperCase())"
+
                class="mt-3 cursor-move"
              ></task-card>
            </draggable>
@@ -219,7 +224,11 @@ export default {
       username:'',
       userdata:'',
       assign:'',
-      namelist:''
+      namelist:'',
+      todos1:'',
+      inprocess1:'',
+      done1:'',
+      block1:'',
 
     }
 
@@ -229,8 +238,8 @@ export default {
     {
       if(this.assign=='' && this.addtitle!='' && this.adddes!='' && this.date!='')
       {
-        var param={userid:this.userdata.userid,title:this.addtitle,des:this.adddes,edate:this.date,username:this.userdata.Name}
-        axios.post('/task/insert',param).then((response) => {
+        var param={userid:this.userdata.userid,title:this.addtitle,des:this.adddes,edate:this.date}
+        axios.post('/tasks/insert',param).then((response) => {
           this.dialog=false;
           this.adddes=''
           this.addtitle=''
@@ -241,12 +250,9 @@ export default {
       {
         if(this.addtitle!='' && this.adddes!='' && this.date!='')
         {
-          axios.get('/findusername/'+this.assign,).then((response) => {
 
-            if(response.data[0].name!='')
-            {
-              var param={userid:this.assign,title:this.addtitle,des:this.adddes+" Assigned by "+this.userdata.Name,edate:this.date,username:response.data[0].name}
-              axios.post('/assign',param).then((response) => {
+              var param={userid:this.assign,title:this.addtitle,des:this.adddes+" Assigned by "+this.userdata.Name,edate:this.date}
+              axios.post('/tasks/insert',param).then((response) => {
                 this.dialog=false;
                 this.adddes=''
                 this.addtitle=''
@@ -254,9 +260,8 @@ export default {
                 this.assign=''
                 this.fetchdata()
               });
-            }
 
-          });
+
         }else
         {
           alert("Filled the Details")
@@ -271,18 +276,19 @@ export default {
     todosave:function(){
       for(var i=0;i<this.todos.length && this.todos[i].userid==this.userdata.userid && this.todos[i].state!=2 && this.todos[i].state!=3 && this.todos[i].state!=4;i++)
       {
-          var param={state:1,id:this.todos[i].id}
-           axios.post('/task/change',param).then((response) => {
+          var param={stateid:1,id:this.todos[i].id}
+           axios.post('/tasks/change',param).then((response) => {
         });
         this.todos[i].state=1;
 
       }
     },
     inprocessave:function(){
-      for(var i=0;i<this.inprocess.length && this.inprocess[i].userid==this.userdata.userid;i++)
+      for(var i=0;i<this.inprocess.length && this.inprocess[i].userid==this.userdata.userid ;i++)
       {
-        var param={state:2,id:this.inprocess[i].id}
-        axios.post('/task/change',param).then((response) => {
+        console.log(this.inprocess[i].title)
+        var param={stateid:2,id:this.inprocess[i].id}
+        axios.post('/tasks/change',param).then((response) => {
         });
         this.inprocess[i].state=2;
       }
@@ -291,8 +297,9 @@ export default {
     donesave:function(){
       for(var i=0;i<this.done.length && this.done[i].userid==this.userdata.userid && this.done[i].state!=4 && this.done[i].state!=1;i++)
       {
-         var param={state:3,id:this.done[i].id}
-        axios.post('/task/change',param).then((response) => {
+        console.log(this.done[i].title)
+         var param={stateid:3,id:this.done[i].id}
+        axios.post('/tasks/change',param).then((response) => {
         });
         this.done[i].state=3;
       }
@@ -301,26 +308,97 @@ export default {
     blocksave:function(){
       for(var i=0;i<this.block.length && this.block[i].userid==this.userdata.userid && this.block[i].state!=1 && this.block[i].state!=3;i++)
       {
-        var param={state:4,id:this.block[i].id}
-        axios.post('/task/change',param).then((response) => {
+        var param={stateid:4,id:this.block[i].id}
+        axios.post('/tasks/change',param).then((response) => {
         });
         this.block[i].state=4;
       }
     },
 
-  fetchdata:function()
+  fetchdata:async function()
   {
-    axios.get('/task/status/1').then((response) => {
-      this.todos=response.data;
+
+    axios.get('/tasks/state/1').then((response) => {
+
+      this.todos1=response.data;
+      let promises = [];
+      let self=this;
+      let i;
+      for(i=0;i<this.todos1.length;i++)
+      {
+        promises.push(axios.get('/usersid/'+this.todos1[i].userid));
+      }
+      Promise.all(promises).then((responses) =>
+      {
+        for(let j=0;j<responses.length;j++)
+        {
+          self.todos1[j].name=responses[j].data[0].name;
+        }
+        this.todos=self.todos1
+        console.log(this.todos);
+      });
+
     });
-    axios.get('/task/status/2').then((response) => {
-      this.inprocess=response.data;
+
+    axios.get('/tasks/state/2').then((response) => {
+      this.inprocess1=response.data;
+      let promises = [];
+      let self=this;
+      let i;
+      for(i=0;i<this.inprocess1.length;i++)
+      {
+        promises.push(axios.get('/usersid/'+this.inprocess1[i].userid));
+      }
+      Promise.all(promises).then((responses) =>
+      {
+        for(let j=0;j<responses.length;j++)
+        {
+          self.inprocess1[j].name=responses[j].data[0].name;
+        }
+        this.inprocess=this.inprocess1
+        console.log(this.inprocess);
+      });
     });
-    axios.get('/task/status/3').then((response) => {
-      this.done=response.data;
+
+    axios.get('/tasks/state/3').then((response) => {
+
+      this.done1=response.data;
+      let promises = [];
+      let self=this;
+      let i;
+      for(i=0;i<this.done1.length;i++)
+      {
+        promises.push(axios.get('/usersid/'+this.done1[i].userid));
+      }
+      Promise.all(promises).then((responses) =>
+      {
+        for(let j=0;j<responses.length;j++)
+        {
+          self.done1[j].name=responses[j].data[0].name;
+        }
+        this.done=this.done1
+        console.log(this.done);
+      });
     });
-    axios.get('/task/status/4').then((response) => {
-      this.block=response.data;
+
+    axios.get('/tasks/state/4').then((response) => {
+      this.block1=response.data;
+      let promises = [];
+      let self=this;
+      let i;
+      for(i=0;i<this.block1.length;i++)
+      {
+        promises.push(axios.get('/usersid/'+this.block1[i].userid));
+      }
+      Promise.all(promises).then((responses) =>
+      {
+        for(let j=0;j<responses.length;j++)
+        {
+          self.block1[j].name=responses[j].data[0].name;
+        }
+        this.block=this.block1
+        console.log(this.block);
+      });
     });
   }
 
@@ -350,7 +428,7 @@ export default {
 
     });
    this.fetchdata();
-    axios.get('/users').then((response) => {
+    axios.get('/allusers').then((response) => {
       this.namelist=response.data;
     });
 

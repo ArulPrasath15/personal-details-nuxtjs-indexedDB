@@ -47,8 +47,9 @@ export default {
         await axios.get('/users/' + this.username).then((response) => {
           this.userdata = response.data[0]
           console.log(this.userdata)
-          if(this.userdata!=undefined)
+          if( this.userdata)
           {
+            console.log("in")
             this.init()
           }else
           {
@@ -66,7 +67,7 @@ export default {
       this.$db.Details.add({
         id: 1,
         Name: this.userdata.name,
-        accounttype: this.userdata.type,
+        admin: this.userdata.admin,
         userid:this.userdata.userid
       }).then(() => this.$router.push('/'));
     }
