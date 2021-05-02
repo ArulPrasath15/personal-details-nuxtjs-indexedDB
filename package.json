@@ -1,5 +1,5 @@
 {
-  "name": "personal-details",
+  "name": "task-table",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -10,11 +10,13 @@
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.13.1",
-    "@nuxtjs/pwa": "^3.3.5",
+    "axios": "^0.21.1",
     "core-js": "^3.9.1",
     "nuxt": "^2.15.3",
     "vue": "^2.6.12",
-    "vue-idb": "^0.2.0"
+    "vue-idb": "^0.2.0",
+    "vuedraggable": "^2.24.3",
+    "vuex": "^3.6.2"
   },
   "devDependencies": {
     "@nuxt/types": "~2.15.0",

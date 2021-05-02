@@ -33,7 +33,7 @@ export default {
     }
   },
   created() {
-    this.$router.push('/personal-details')
+    this.$router.push('/login')
   }
 }
 </script>
