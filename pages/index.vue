@@ -335,7 +335,6 @@ export default {
       }
       return s.substring(0,s.length-2);
     }
-
   },
   created() {
     this.$db.Details.toArray().then((tests) => {
