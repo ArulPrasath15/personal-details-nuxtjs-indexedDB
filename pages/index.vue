@@ -7,7 +7,7 @@
            <v-row class="pt-8"><h1 class="ml-5 ">BOARD</h1><h4 class="pt-3 pl-2" ></h4></v-row>
 
             <v-expansion-panels accordion class="mt-4" >
-            <v-expansion-panel style="background-color: #d0d3f8" >
+            <v-expansion-panel style="background-color: #f5f6ff" >
               <v-expansion-panel-header disable-icon-rotate>
                 <v-row>
                   <v-col>
@@ -21,7 +21,7 @@
                 </template>
               </v-expansion-panel-header>
               <v-expansion-panel-content>
-                <v-list dense style="background-color: #d0d3f8">
+                <v-list dense style="background-color: #F5F6FFFF">
                   <v-list-item
                     v-for="(item, i) in namelists.split(',')"
                     :key="i"

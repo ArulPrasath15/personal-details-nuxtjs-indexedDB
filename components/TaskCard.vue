@@ -33,10 +33,6 @@ export default {
 {
   cursor: grabbing;
 }
-.hovercursor
-{
-  cursor: grabbing;
-}
 
 
 

@@ -1,19 +1,19 @@
-# Personal details - nuxtjs- IndexedDB
+**Front End :**
+  * Vue + Nuxt JS
+  * Index DB (Plugin)
 
-## Build Setup
+**Back End :**
+  * Node JS + Express + Dynamo DB
+  * Serverless Framework
+  * JWT (Plugin)
+  * Serverless Local (Plugin)
+  * AWS CLI
+  * UUID
 
-```bash
-# install dependencies
-$ npm install
-
-# serve with hot reload at localhost:3000
-$ npm run dev
-
-# build for production and launch server
-$ npm run build
-$ npm run start
-
-# generate static project
-$ npm run generate
-```
-
+**AWS Services :**
+  * S3 - Static Site 
+  * Dynamo DB
+  * Cloud Formation
+  * Lambda 
+  * API Gateway 
+  * ECR
