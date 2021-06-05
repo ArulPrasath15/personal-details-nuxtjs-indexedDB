@@ -6,6 +6,7 @@
       <v-row justify="start" class="ml-1">
          <h3 >{{task.des}}</h3>
       </v-row>
+
         <v-row justify="start" class="ml-1"><h4> Estimate Date : <u>{{task.edate.substring(0,10)}}</u></h4></v-row>
 <!--         <v-row justify="end"><h4> <u>Token ID : {{task.id}}</u></h4></v-row>-->
 
